@@ -9,5 +9,6 @@ namespace Learning2023.csharp_advanced_topics
     // https://github.com/CodeMazeBlog/CodeMazeGuides/tree/main/csharp-advanced-topics
     public class AadvancedTopicsTest
     {
+        //
     }
 }
