@@ -10,7 +10,8 @@ namespace Learning2023.BasicProgram
     {
         public static void Test()
         {
-
+            FibonacciTest fibonacciTest = new FibonacciTest();
+            fibonacciTest.Test1();
         }
     }
 
@@ -20,16 +21,16 @@ namespace Learning2023.BasicProgram
         int i = 0; int j = 1; int n = 10;
         public void Test1()
         {
-            Console.Write($"{ i}  { j}");
+            Console.Write($"{ i} , { j} , ");
             for (int k = 2; k < n; k++)
             {
                 int temp = i+j;
-                Console.Write(temp);
+                Console.Write($"{temp} , ");
                 i = j;
                 j= temp;
             }
         }
-        // 0 1,1, 2 3,5, 8
+        // 0 1,1, 2 3,5, 8, 13, 21, 34
 
     }
 }
