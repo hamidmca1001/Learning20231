@@ -12,11 +12,15 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using System.Diagnostics;
 
 namespace ConsoleApp1
 {
     internal class AadTokenTest
     {
+        //var tenantId = "e03dc8b0-440a-4ed0-ad9b-926523715735";
+        //var clientId = "d676a254-3ec1-4749-94af-442fd836ad14";
+        //var secret = "BJe8Q~2PtOi80EwtVhIB7DgSZwTedCwcPJ9fdawI";
         //
         // The Client ID is used by the application to uniquely identify itself to Azure AD.
         // The Tenant is the name or Id of the Azure AD tenant in which this application is registered.
@@ -31,7 +35,7 @@ namespace ConsoleApp1
         //URL of your Azure DevOps account.
         internal static string azureDevOpsOrganizationUrl = "https://dev.azure.com/HCLGreenSoftware/"; //ConfigurationManager.AppSettings["ado:OrganizationUrl"];
 
-        internal static string[] scopes = new string[] { "9796d507-cced-453e-a27e-c2d97a264cc8/user_impersonation" }; //Constant value to target Azure DevOps. Do not change  
+        internal static string[] scopes = new string[] { "499b84ac-1321-427f-aa17-267ca6975798/user_impersonation" }; //Constant value to target Azure DevOps. Do not change  
 
         // MSAL Public client app
         private static IPublicClientApplication application;
@@ -157,8 +161,8 @@ namespace ConsoleApp1
 
         private async static void ListProjects(string authHeader)
         {
-            authHeader = "eyJ0eXAiOiJKV1QiLCJub25jZSI6IjNaUHNPQzJJeEtwWWQtVDBnWlVTUkRWMVVzSERLUE53WGRRdm9KMmlFOUUiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9lMDNkYzhiMC00NDBhLTRlZDAtYWQ5Yi05MjY1MjM3MTU3MzUvIiwiaWF0IjoxNjgyNTkzOTIzLCJuYmYiOjE2ODI1OTM5MjMsImV4cCI6MTY4MjU5ODgxOSwiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IkFWUUFxLzhUQUFBQWQySVphZkthYmJZSmI4L3BqcGoyVmxaNHRYRURZUlVHNmFCeVNzU3prd3VmNmEvc0Y4RVNGTUpYN1o4d0VZN0dScHdCU08yU3p2UDdzeHBsUE0wL0Q5KzErc3IxSVFUajhubDlOSzNrTm9zPSIsImFtciI6WyJwd2QiLCJtZmEiXSwiYXBwX2Rpc3BsYXluYW1lIjoiYXV0aEZ1bmNUZXN0MTIzIiwiYXBwaWQiOiI5Nzk2ZDUwNy1jY2VkLTQ1M2UtYTI3ZS1jMmQ5N2EyNjRjYzgiLCJhcHBpZGFjciI6IjEiLCJmYW1pbHlfbmFtZSI6IkgiLCJnaXZlbl9uYW1lIjoiSGFtaWRhbGkiLCJpZHR5cCI6InVzZXIiLCJpcGFkZHIiOiIxMDMuMjguMjUzLjEzNyIsIm5hbWUiOiJIYW1pZGFsaS5oIiwib2lkIjoiYjAzNTRiNzUtOTI1Yi00NDJhLTgxNjktOWFmMjM1ZTRhZDZhIiwicGxhdGYiOiIzIiwicHVpZCI6IjEwMDMyMDAyODY0NzhEN0MiLCJyaCI6IjAuQVhZQXNNZzk0QXBFMEU2dG01SmxJM0ZYTlFNQUFBQUFBQUFBd0FBQUFBQUFBQUNaQVBzLiIsInNjcCI6ImVtYWlsIG9wZW5pZCBwcm9maWxlIiwic2lnbmluX3N0YXRlIjpbImttc2kiXSwic3ViIjoiTDlZbC1IT0x3NDRsdEs2SjVlNlpWdUNvRFRwZzBpLWlVOWIycGtyV1o1QSIsInRlbmFudF9yZWdpb25fc2NvcGUiOiJOQSIsInRpZCI6ImUwM2RjOGIwLTQ0MGEtNGVkMC1hZDliLTkyNjUyMzcxNTczNSIsInVuaXF1ZV9uYW1lIjoiaGFtaWRhbGkuaEB1c2Vyc21zZnR0ZWxjby5vbm1pY3Jvc29mdC5jb20iLCJ1cG4iOiJoYW1pZGFsaS5oQHVzZXJzbXNmdHRlbGNvLm9ubWljcm9zb2Z0LmNvbSIsInV0aSI6InYxRUE3eFc2YlV5UjNOMzlmY04zQUEiLCJ2ZXIiOiIxLjAiLCJ3aWRzIjpbImI3OWZiZjRkLTNlZjktNDY4OS04MTQzLTc2YjE5NGU4NTUwOSJdLCJ4bXNfc3QiOnsic3ViIjoiUUlkNUk0LUhveXg4eTFUVDc1UGMtVEQ4cnlCbDJwVDdtcnF4aERhZ2FoMCJ9LCJ4bXNfdGNkdCI6MTY1MjQ3MTE5OX0.jvzkDL_KiR-fcwiruP4vxMbP901yGGgcvv0hi0zYfQTqAA9_pqUPCWaZ-1v6lfsnlAEPg88yYQa1Iat6AwQdGpF7YK7yM26cpyXRAN0KyFUde7js2pR52E9SA0n2m32BWvYj6ViTcn-4NYLfWkxZcXdGxVjQL6QKBlAjNDnDogZZWimP-olcU6q1nodwrZIPuYVM1tDy0G4-3A8KJ5VKSCPnHbvu6KcBI7z_US47aoGVOYOrhIOpMxG1nAG14UTC3OIud-8UZWsBaheRnQ7L5cXpmLgGLcJlhHiD-pHkeBE7Etw7QB92bMVw4Bs06Z_YMftn3xkMZrbE-a53ojlqEg";
-            var client = GetClient(authHeader);
+            authHeader = "AWQAm/8TAAAA4pV6g/fnlu5xULE16epNLdiUgIViaVGHC+W1P1n9ZoF+twaSgq8ziYrmmBfNsJiymLg+navmLRDAbuPXXyuuRvATX07DdiYr+B7GVyR+G6+7xch4XoIi5nFRc0o9ZzH3";
+                var client = GetClient(authHeader);
             var uri = azureDevOpsOrganizationUrl + "_apis/projects?api-version=6.0";
 
 
@@ -190,6 +194,55 @@ namespace ConsoleApp1
                     Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", "", tkn))));
 
             return client;
+        }
+
+
+
+        public static async Task MSFTTest()
+        {
+            ListProjects("ff");
+
+            // Initialize the MSAL library by building a public client application
+            application = PublicClientApplicationBuilder.Create(clientId)
+                                       .WithAuthority(authority)
+                                       .WithDefaultRedirectUri()
+                                       .Build();
+
+            var accounts = await application.GetAccountsAsync();
+
+            Microsoft.Identity.Client.AuthenticationResult result = null;
+            try
+            {
+                result = await application.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                                  .ExecuteAsync();
+            }
+            catch (MsalUiRequiredException ex)
+            {
+                // A MsalUiRequiredException happened on AcquireTokenSilent.
+                // This indicates you need to call AcquireTokenInteractive to acquire a token
+                Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
+
+                try
+                {
+                    result = await application.AcquireTokenInteractive(scopes)
+                                      .ExecuteAsync();
+                }
+                catch (MsalException msalex)
+                {
+                  var a1 = $"Error Acquiring Token:{System.Environment.NewLine}{msalex}";
+                }
+            }
+            catch (Exception ex)
+            {
+               var a2 = $"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}";
+                return;
+            }
+
+            if (result != null)
+            {
+                string accessToken = result.AccessToken;
+                // Use the token
+            }
         }
     }
 

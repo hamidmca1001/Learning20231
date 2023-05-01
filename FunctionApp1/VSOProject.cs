@@ -41,7 +41,11 @@ namespace FunctionApp1
                 client.BaseAddress = new Uri(azureDevOpsOrganizationUrl);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                   Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", "", token))));
+
                 //client.DefaultRequestHeaders.Add("Bearer", token);
                 //.Authorization = new AuthenticationHeaderValue("Bearer", token);
 

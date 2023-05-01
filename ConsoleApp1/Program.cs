@@ -3,14 +3,18 @@ using ConsoleApp1;
 
 Console.WriteLine("Hello, World!");
 
-//Class2Token.M1();
+Class2Token.M1();
+//Class2Token.NewMethod("");
 
 
 //AadTokenTest.GetAuthorizationToken();
 //Console.WriteLine(AzureDetails.AccessToken);
 
 
-Console.ReadLine();
+//AadTokenTest.TestToken();
+//AadTokenTest.MSFTTest();
 
-AadTokenTest.TestToken();
+//ManagedClientConsoleAppSample.TokenTest();
+
+Console.ReadLine();
 
