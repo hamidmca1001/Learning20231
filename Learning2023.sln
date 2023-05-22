@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionApp1", "FunctionApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{2FEA78C7-EB18-4F88-844C-BD7CB8CBDFA8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AadTokenWebApi", "AadTokenWebApi\AadTokenWebApi.csproj", "{86EA27E2-EFD9-4773-B829-9048D5C51B74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{2FEA78C7-EB18-4F88-844C-BD7CB8CBDFA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FEA78C7-EB18-4F88-844C-BD7CB8CBDFA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FEA78C7-EB18-4F88-844C-BD7CB8CBDFA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86EA27E2-EFD9-4773-B829-9048D5C51B74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86EA27E2-EFD9-4773-B829-9048D5C51B74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86EA27E2-EFD9-4773-B829-9048D5C51B74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86EA27E2-EFD9-4773-B829-9048D5C51B74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

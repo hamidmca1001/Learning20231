@@ -7,25 +7,19 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-
-using Microsoft.Identity.Client;
-using System.Linq;
 using System.Globalization;
+using Microsoft.Identity.Client;
 using System.Text;
+using System.Linq;
 
 namespace FunctionApp1
 {
-    public class AadTokenFunctionTest1
+    public class AadTokenFunction2
     {
-        //
-        // The Client ID is used by the application to uniquely identify itself to Azure AD.
-        // The Tenant is the name or Id of the Azure AD tenant in which this application is registered.
-        // The AAD Instance is the instance of Azure, for example public Azure or Azure China.
-        // The Authority is the sign-in URL of the tenant.
-        //
         internal static string aadInstance = "https://login.microsoftonline.com/{0}/v2.0";  //ConfigurationManager.AppSettings["ida:AADInstance"];
         internal static string tenant = "e03dc8b0-440a-4ed0-ad9b-926523715735";      //ConfigurationManager.AppSettings["ida:Tenant"];
-        internal static string clientId = "80836f79-d00c-4f46-a789-89b276a0f82e";     //ConfigurationManager.AppSettings["ida:ClientId"];
+        internal static string clientId = "a58a47b6-bc22-4fa0-80eb-4d3ca1358e27";
+            //"6c7667fe-f76a-410f-88ad-09f9d728d839";     //ConfigurationManager.AppSettings["ida:ClientId"];
         internal static string authority = String.Format(CultureInfo.InvariantCulture, aadInstance, tenant);
 
         //URL of your Azure DevOps account.
@@ -36,8 +30,7 @@ namespace FunctionApp1
         // MSAL Public client app
         private static IPublicClientApplication application;
 
-
-        [FunctionName("AadTokenFunctionTest1")]
+        [FunctionName("AadTokenFunction2")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
@@ -88,11 +81,13 @@ namespace FunctionApp1
             return new OkObjectResult(sb);
         }
 
+
         public async Task<string> GetToken(ILogger log, StringBuilder sb)
         {
             sb.AppendLine("Token Calling.");
             log.LogInformation("Token Calling.");
             var authResult = await SignInUserAndGetTokenUsingMSAL(scopes, log, sb);
+
 
             if (authResult != null)
             {
@@ -124,6 +119,14 @@ namespace FunctionApp1
                                        .Build();
 
 
+            //application = PublicClientApplicationBuilder.Create(clientId)
+            //     //.WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+            //     // .WithRedirectUri("http://localhost")
+            //     //.WithRedirectUri("https://azfunctionapphamid.azurewebsites.net/.auth/login/aad/callback")
+            //     //.WithAuthority(authority)
+            //     .WithDefaultRedirectUri()
+            //     //.WithAuthority(AzureCloudInstance.AzurePublic, tenant)
+            //    .Build();
 
             try
             {
@@ -136,47 +139,90 @@ namespace FunctionApp1
 
                 var accounts = await application.GetAccountsAsync();
 
-                if (accounts.Any())
-                {
-                    log.LogInformation($"SignInUserAndGetTokenUsingMSAL Calling. : {accounts.Count()}");
-                    result = await application.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-                            .ExecuteAsync();
-                }
-                else
-                {
-                    log.LogInformation($"checking for MSFT Login.");
-                    sb.AppendLine($"checking for MSFT Login.");
-                    // If the token has expired, prompt the user with a login prompt
-                    result = await application.AcquireTokenInteractive(scopes)
-                            .WithClaims(null)
-                            .ExecuteAsync();
+                //if (accounts.Any())
+                //{
+                log.LogInformation($"SignInUserAndGetTokenUsingMSAL Calling. : {accounts.Count()}");
+                result = await application.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                        .ExecuteAsync();
+                //}
+                //else
+                //{
+                //log.LogInformation($"checking for MSFT Login.");
+                //sb.AppendLine($"checking for MSFT Login.");
+                //// If the token has expired, prompt the user with a login prompt
+                //result = await application.AcquireTokenInteractive(scopes)
+                //        .WithClaims(null)
+                //        .ExecuteAsync();
 
-                    if (result != null)
-                    {
-                        log.LogInformation($"result : {result.Account}");
-                        log.LogInformation($"After MSFT Response. {result.IdToken}");
-                    }
-                    else
-                    {
-                        sb.AppendLine($"Result received null");
-                        log.LogInformation($"Result received null");
-                    }
-                    return result;
-                }
+                //if (result != null)
+                //{
+                //    log.LogInformation($"result : {result.Account}");
+                //    log.LogInformation($"After MSFT Response. {result.IdToken}");
+                //}
+                //else
+                //{
+                //    sb.AppendLine($"Result received null");
+                //    log.LogInformation($"Result received null");
+                //}
+                //return result;
+                // }
 
             }
             catch (MsalUiRequiredException ex)
             {
                 sb.AppendLine($"Exception throw in  msft redirect authentication : {ex.Message}");
                 log.LogInformation($"Exception throw in  msft redirect authentication : {ex.Message}");
+
+                log.LogInformation($"checking for MSFT Login.");
+                sb.AppendLine($"checking for MSFT Login.");
+                // If the token has expired, prompt the user with a login prompt
+                result = await application.AcquireTokenInteractive(scopes)
+                        .WithClaims(ex.Claims)
+                        .ExecuteAsync();
+
+                if (result != null)
+                {
+                    log.LogInformation($"result : {result.Account}");
+                    log.LogInformation($"After MSFT Response. {result.IdToken}");
+                }
+                else
+                {
+                    sb.AppendLine($"Result received null");
+                    log.LogInformation($"Result received null");
+                }
+                //return result;
+
                 Console.WriteLine(ex.Message);
             }
 
             return result;
         }
 
+
+        public async Task Test1()
+
+        {
+            string Instance = "https://login.microsoftonline.com/";
+
+            IPublicClientApplication publicClientApp = PublicClientApplicationBuilder.Create(clientId)
+               .WithAuthority($"{Instance}{tenant}")
+               .WithDefaultRedirectUri().Build();
+
+
+            //IPublicClientApplication publicClientApp = PublicClientApplicationBuilder.Create(clientId)
+            //    .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+            //    .WithAuthority(AzureCloudInstance.AzurePublic, tenant)
+            //    .Build();
+
+            var scope1 = new string[] { "api://80836f79-d00c-4f46-a789-89b276a0f82e/user_impersonation" };
+            //api://80836f79-d00c-4f46-a789-89b276a0f82e/user_impersonation
+            var accounts = await publicClientApp.GetAccountsAsync();
+            var firstAccount = accounts.FirstOrDefault();
+            var authResult = await publicClientApp.AcquireTokenSilent(scope1, firstAccount)
+                                                   .ExecuteAsync();
+
+            var t1 = authResult.CreateAuthorizationHeader();
+            var token1 = authResult.IdToken;
+        }
     }
-
-
-
 }
