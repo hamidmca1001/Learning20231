@@ -59,16 +59,12 @@ namespace FunctionApp1
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var vssConnection = await CreateVssConnection();
-
-            var workItemTrackingHttpClient = vssConnection.GetClient<WorkItemTrackingHttpClient>();
+           
 
             try
             {
-                var workItem = await workItemTrackingHttpClient.GetWorkItemAsync(123);
-
-                workItem.Fields.TryGetValue("System.Title", out var title);
-                var responseMessage = $"Work item '{title}' fetched. This HTTP triggered function executed successfully.";
+                
+                var responseMessage = $"Work item  This HTTP triggered function executed successfully.";
                 return new OkObjectResult(responseMessage);
             }
             catch (Exception ex)
@@ -77,19 +73,7 @@ namespace FunctionApp1
             }
         }
 
-        private static async Task<VssConnection> CreateVssConnection()
-        {
-            var accessToken = await GetManagedIdentityAccessToken();
-            var token = new VssAadToken("Bearer", accessToken);
-            var credentials = new VssAadCredential(token);
-
-            var settings = VssClientHttpRequestSettings.Default.Clone();
-            settings.UserAgent = AppUserAgent;
-
-            var organizationUrl = new Uri(new Uri(AdoBaseUrl), AdoOrgName);
-            return new VssConnection(organizationUrl, credentials, settings);
-        }
-
+        
         //public static async Task<string> GetManagedIdentityAccessToken()
         //{
         //    var tokenRequestContext = new TokenRequestContext(new scope);
