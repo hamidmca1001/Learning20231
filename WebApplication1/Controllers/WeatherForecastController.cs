@@ -96,15 +96,7 @@ namespace WebApplication1.Controllers
         }
 
 
-        [HttpGet]
-        [Route("ReadPstFile")]
-        public async Task<IActionResult> ReadPstFile()
-        {
-            var response = "";
-
-
-            return Ok(response);
-        }
+        
         private static HttpContent CreateHttpContent(object content)
         {
             HttpContent httpContent = null;
